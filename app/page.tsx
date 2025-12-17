@@ -1,65 +1,50 @@
 import Image from "next/image";
 
-export default function Home() {
+import { addPost, getPosts, removePost, editPost } from '@/lib/posts'
+
+
+export default async function BlogApp() {
+  const posts = await getPosts()
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  
+    <div className="px-4 sm:px-8 md:px-16 lg:px-32 xl:px-56 max-w-5xl mx-auto">
+      <h1 className="text-center text-3xl my-0 sm:text-3xl md:text-4xl"> Wikipedia </h1>
+      <form action={addPost} className="flex flex-col">
+        <label className="text-center text-3xl my-0 sm:text-3xl md:text-4xl">
+          <textarea placeholder="Entrer votre article" className="border w-full h-40 text-base my-8 sm:text-base md:text-base" name="title" ></textarea>
+        </label>
+        <button className="px-4 py-2 rounded-md font-medium text-blue-600 border-2 border-blue-600/90
+         bg-white hover:bg-ppy-2 ink-50 ">Submit</button>
+      </form>
+      <h1 className="text-center text-xl my-0 sm:text-3xl md:text-4xl px-4 py-4 "> ARTICLES </h1>
+        <ul>
+        {posts.map((post, id) => (
+          <div className="py-5">
+          <form  >
+            <div>
+          <textarea
+            name="title"
+            defaultValue={post.title}
+            className="border w-full h-40 px-2"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+          </textarea>
+          <li className="bold text-1xl"> id de l'article : {post.id}</li>
+          </div>
+            <button formAction={removePost.bind(null, post.id)} key={id}  className="px-4 py-2 rounded-md font-medium text-blue-600 border-2 border-blue-600/90
+             bg-white hover:bg-pink-50 ">
+              Delete article
+            </button>
+            <button formAction={editPost} key={id} className="px-4 py-2 rounded-md font-medium text-blue-600 border-2 border-blue-600/90
+             bg-white hover:bg-pink-50 ">
+              Edit article
+            </button>
+            <input type="hidden" name="id" value={post.id} />
+
+          </form>
+          </div>
+        ))}
+      </ul>
+      </div>
+  )
 }
+
